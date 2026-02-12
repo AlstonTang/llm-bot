@@ -1,7 +1,7 @@
 # llm-bot
 Locally Hosted LLM Discord Bot for your servers!
 
-Ping with @username for the bot to respond. It can see the entire reply chain as context.
+Ping with @username or reply to the bot's message for the bot to respond. It can see the entire reply chain as context.
 
 ## Setup:
 1. Create a Python environment and install the packages in requirements.txt
