@@ -24,5 +24,11 @@ Ping with @username for the bot to respond. It can see the entire reply chain as
 - Queues messages when there's a lot coming in at the same time
 - Splits long output among several Discord messages when needed due to the message character limit
 
+### Current Differences from the base repo
+- No need to ping the bot when replying to it
+- Easier setup through `self.user.id`
+- Specify the model in `.env`. No need to be stuck on `gpt-oss:20b`
+
 ## Roadmap:
 - Allow the model to search for information on the web
+  - This will be pulled from the base repo when it's implemented.
