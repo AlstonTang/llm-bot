@@ -55,11 +55,10 @@ class MyClient(discord.Client):
             self.request_queue.task_done()
 
     async def on_message(self, message: discord.Message):
-        if message.author == self.user:
-            return
-
-        if f"<@{self.user.id}>" not in message.content:
-            return
+        if (f"<@{self.user.id}>" not in message.content):
+            lookahead_msg = await message.channel.fetch_message(message.reference.message_id)
+            if not (lookahead_msg and lookahead_msg.author == self.user): return
+        elif message.author == self.user: return
 
         if args.maintenance:
             await message.reply(random.choice(self.maintenance_messages))
@@ -90,7 +89,7 @@ class MyClient(discord.Client):
 
         messages.insert(0, {
             'role': 'system',
-            'content': 'do not use markdown tables, as they are unsupported (any other markdown is fine)\nalso be concise with your response'
+            'content': 'Do not use markdown tables because they are unsupported (any other markdown is fine). Also, be concise with your response. There is no need to overthink or overdo anything.'
         })
 
         await self.request_queue.put((message, messages))
