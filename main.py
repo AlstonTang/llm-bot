@@ -7,6 +7,7 @@ import random
 
 from search import search
 from dotenv import load_dotenv
+from datetime import date
 
 load_dotenv()
 
@@ -41,7 +42,7 @@ class MyClient(discord.Client):
 
             messages_payload.insert(0, {
                 'role': 'system',
-                'content': 'Be concise with your response. There is no need to overthink or overdo anything, but be friendly. Do not use markdown tables or LaTeX because they are unsupported (any other markdown is fine; you are allowed to use any formating during and only during thinking). If a query seems to require search (real-time information), use the search tool and cite the sources used in your reply. The search tool takes in one parameter called `query` which should be a string.'
+                'content': f'Be concise with your response. There is no need to overthink or overdo anything, but be friendly. Do not use markdown tables or LaTeX because they are unsupported (any other markdown is fine; you are allowed to use any formating during and only during thinking). If a query seems to require search (complex information, or anything after 2023), you are required to use the search tool and cite the sources used in your reply. The search tool takes in only one parameter called `query`, which should be a string. Note that today is {str(date.today())}.'
             })
 
             try:
@@ -53,7 +54,8 @@ class MyClient(discord.Client):
                             ollama.chat,
                             model=os.getenv("MODEL"),
                             messages=messages_payload,
-                            tools=[search] # Function passed here
+                            tools=[search],
+                            options={"temperature": 0.6} # Should help it use tools better without sacrificing too much creativity.
                         )
 
                         messages_payload.append(response.message)
@@ -98,6 +100,7 @@ class MyClient(discord.Client):
     async def on_message(self, message: discord.Message):
         if self.user is None: return
         if (f"<@{self.user.id}>" not in message.content):
+            if message.reference is None: return
             lookahead_msg = await message.channel.fetch_message(message.reference.message_id)
             if not (lookahead_msg and lookahead_msg.author == self.user): return
         elif message.author == self.user: return

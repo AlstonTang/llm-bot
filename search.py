@@ -17,7 +17,7 @@ def debug(f):
     return wrap
 
 @debug
-def search(query: str) -> str:
+def search(query: str, *args, **kwargs) -> str:
     """Get online search results. Useful for finding real-time or factual information.
     
     :param query: The query to pass into the search engine
@@ -25,6 +25,11 @@ def search(query: str) -> str:
     :returns: Search results.
     :rtype: str
     """ 
+
+    if args:
+        print(f"Warning: Ignoring extra positional arguments: {args}")
+    if kwargs:
+        print(f"Warning: Ignoring extra keyword arguments: {kwargs}")
 
     try:
         response = ddgsInstance.text(query)
